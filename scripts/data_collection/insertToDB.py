@@ -24,11 +24,14 @@ def main():
     # Connect to localhost:15432 (the tunnel endpoint)
     conn = psycopg2.connect(**CONNECTION_PARAMS)
     #Insertion Code
-    csvStockDirectory = "./input/503_Stocks/"
-    csv_files = glob.glob(os.path.join(csvStockDirectory, "*.csv"))
+    # 503 stock CSV files
+    #csvStockDirectory = "./input/503_Stocks/"
+    # 29 stock CSV files
+    csvStockDirectory = "../../input/29_Stocks/"
+    csv_files = glob.glob(os.path.join(csvStockDirectory, "*.csv")) # get all csv files in directory
     csv_filenames = [os.path.basename(file) for file in csv_files]
     cursor = conn.cursor()
-    logFile = open("./output/RawInsertLog.txt", "a")
+    logFile = open("../../output/RawInsertLog.txt", "a")
     for i in range(len(csv_files)):
         try:
             # Read CSV and clean data
@@ -60,7 +63,7 @@ def main():
             continue
     logFile.write(f" Sector Insertion:\n")
     # End of i loop
-    csvSectorFilePath = "./input/SectorFixedList.csv"
+    csvSectorFilePath = "../../input/SectorFixedList.csv"
     sector_df = pd.read_csv(csvSectorFilePath)
     sector_df['_source_name'] = 'CSV Import'
     sector_df['_source_filename'] = os.path.basename(csvSectorFilePath)
