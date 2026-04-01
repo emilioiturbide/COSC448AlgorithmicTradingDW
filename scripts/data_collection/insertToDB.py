@@ -1,34 +1,81 @@
-# Original author: Justin Drenka
+# ================================================================================
+# Script: insertToDB.py
+
+# Purpose: 
+# This script is responsible for inserting raw stock data from CSV files 
+#   into the PostgreSQL database. It connects to the database, reads the CSV files, 
+#   and uses the COPY command for efficient bulk insertion. 
+# It also logs the results of the insertion process, including any errors that occur.
+
+# Intended Use: 
+# This script is intended to be run after the database schema and tables have been created. 
+# It should be run whenever new raw stock data is available in CSV format that needs to be 
+#   ingested into the database.
+
+# Usage: 
+# Set the `DATABASE_URL` environment variable if needed and run:
+#     python insertToDB.py
+
+# Output: 
+# The script will insert data into the appropriate tables in the database and log 
+#   the results of the insertion process to a file named `RawInsertLog.txt` in 
+#   the `output` directory.
+
+# Author: Justin Drenka
+# Original Script Name: DataInsertionFromCSV.py
 # Source: https://github.com/youry/AlgorithmicTradingPublic
 # License: MIT
 # Modified by: Emilio Iturbide - 02/05/2026
-# Modifications: Updated connection parameters, 
+# Modifications: Updated connection parameters,
 #               removed casting sections to ensure data would land correctly in the DB,
 #               added additional audit columns to the staging tables,
+#               added logging of insertion results to a file for auditing purposes.
 
-#we created 503 stock tables, and a sector table before running this script 
+# Note: 
+# The script assumes that the CSV files are formatted correctly and that the 
+#   database connection parameters are set in the environment variables. 
+# It also assumes that the necessary tables have already been created in the 
+#   database to receive the data.
+# ================================================================================
+
 import psycopg2
 import pandas as pd
 import os
 import glob
 from io import StringIO
+# ================================================================================
+# Modified by Emilio Iturbide - 02/05/2026
+# Modifications: Updated connection parameters,
+#               Added import of dotenv to load environment variables from .env file 
+#               if present, Added error handling for dotenv import to allow script
+#               to run even if dotenv is not installed or .env file is missing.
+# ================================================================================
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
 
 CONNECTION_PARAMS = {
-    'host': 'localhost',
-    'port': 15432,
-    'database': 'emilioig_db',
-    'user': 'emilioig',
-    'password': 'Emitgo_03'
+    'host': os.getenv('DATABASE_HOST'),
+    'port': os.getenv('DATABASE_PORT'),
+    'database': os.getenv('DATABASE_NAME'),
+    'user': os.getenv('DATABASE_USER'),
+    'password': os.getenv('DATABASE_PASSWORD')
 }
 def main():
     # Connect to localhost:15432 (the tunnel endpoint)
     conn = psycopg2.connect(**CONNECTION_PARAMS)
     #Insertion Code
+    # ================================================================================
+    # Modified by Emilio Iturbide - 02/05/2026
+    # Modifications: Updated file paths to match new directory structure,
+    # ================================================================================
     # 503 stock CSV files
     #csvStockDirectory = "./input/503_Stocks/"
     # 29 stock CSV files
     csvStockDirectory = "../../input/29_Stocks/"
-    csv_files = glob.glob(os.path.join(csvStockDirectory, "*.csv")) # get all csv files in directory
+    csv_files = glob.glob(os.path.join(csvStockDirectory, "*.csv"))
     csv_filenames = [os.path.basename(file) for file in csv_files]
     cursor = conn.cursor()
     logFile = open("../../output/RawInsertLog.txt", "a")
@@ -43,6 +90,13 @@ def main():
             print(f"Now inserting into {currentBaseName}: ", csv_filenames[i])
             logFile.write(currentBaseName + ":\n")
 
+            # ================================================================================
+            # Modified by Emilio Iturbide - 02/05/2026
+            # Modifications: Added _source_name and _source_filename columns to the DataFrame
+            #               to track the origin of the data in the database, and filtered the DataFrame
+            #               to include only the necessary columns for insertion.
+            #               Deleted data casting to avoid casting errors.
+            # ================================================================================
             # add _source and _source_filename columns
             currentDataFrame['_source_name'] = 'CSV Import'
             currentDataFrame['_source_filename'] = csv_filenames[i]
@@ -52,6 +106,11 @@ def main():
             currentDataFrame.to_csv(buffer, index=False, header=False)
             buffer.seek(0)
             print("reached before")
+            # ================================================================================
+            # Modified by Emilio Iturbide - 02/05/2026
+            # Modifications: Updated COPY command to include new columns and match the 
+            #                structure of the staging tables.
+            # ================================================================================
             copy_sql = f"COPY market.{currentBaseName} (date, open, high, low, close, volume, _source_name, _source_filename) FROM STDIN WITH CSV"
             cursor.copy_expert(copy_sql, buffer)
             conn.commit()
@@ -65,6 +124,12 @@ def main():
     # End of i loop
     csvSectorFilePath = "../../input/SectorFixedList.csv"
     sector_df = pd.read_csv(csvSectorFilePath)
+    # ================================================================================
+    # Modified by Emilio Iturbide - 02/05/2026
+    # Modifications: Added _source_name and _source_filename columns to the DataFrame
+    #               to track the origin of the data in the database, and filtered the DataFrame
+    #               to include only the necessary columns for insertion.
+    # ================================================================================
     sector_df['_source_name'] = 'CSV Import'
     sector_df['_source_filename'] = os.path.basename(csvSectorFilePath)
     row_tuples = [
@@ -73,8 +138,8 @@ def main():
     ]
     try:
         cursor.executemany("""INSERT INTO market.sectors
-                                           (symbol, sector, _source_name, _source_filename)
-                                       VALUES (%s, %s, %s, %s)""", row_tuples)
+                              (symbol, sector, _source_name, _source_filename)
+                              VALUES (%s, %s, %s, %s)""", row_tuples)
         conn.commit()
         logFile.write(f" Successfully inserted Sector Data\n")
     except psycopg2.Error as e:

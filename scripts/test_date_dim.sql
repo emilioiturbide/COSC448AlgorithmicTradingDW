@@ -1,0 +1,30 @@
+SELECT sk_date_id,
+       datetime,
+       date,
+       hour,
+       minute,
+       second,
+       day_of_week,
+       day_name,
+       day_of_month,
+       day_of_year,
+       week_of_month,
+       week_of_year,
+       month,
+       month_name,
+       year,
+       quarter,
+       is_weekend,
+       is_holiday,
+       fiscal_year,
+       fiscal_quarter,
+       granularity,
+       is_pre_market,
+       is_regular_session,
+       is_after_hours,
+       timezone,
+       is_early_close
+FROM dw_test.dim_date
+WHERE date = '2024-07-03'
+ORDER BY datetime DESC
+LIMIT 100;

@@ -14,15 +14,6 @@ entity "<Symbol>" {
     * _loaded_at : TIMESTAMP
 }
 
-entity "sectors" {
-    * symbol : VARCHAR(10) <<PK>>
---
-    * sector : VARCHAR(50)
-    * _source_name : VARCHAR(255)
-    * _source_filename : VARCHAR(255)
-    * _loaded_at : TIMESTAMP
-}
-
 entity "symbol_info" {
     * symbol : VARCHAR(10) <<PK>>
 --
@@ -37,8 +28,14 @@ entity "symbol_info" {
     * sector : VARCHAR(100)
     * country : VARCHAR(100)
     * full_time_employees : VARCHAR(50)
+    * city : VARCHAR(100)
+    * state : VARCHAR(100)
+    * zip : VARCHAR(20)
+    * address : VARCHAR(255)
     * ipo_date : VARCHAR(50)
     * is_active : VARCHAR(10)
+    * is_etf : VARCHAR(10)
+    * is_fund : VARCHAR(10)
     * _source_name : VARCHAR(255)
     * _source_filename : VARCHAR(255)
     * _loaded_at : TIMESTAMP
