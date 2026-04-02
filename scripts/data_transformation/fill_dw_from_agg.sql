@@ -41,6 +41,7 @@ DECLARE
   v_schema_name TEXT := 'dw_test'; -- Change this to your desired schema name; must match the schema where your star schema tables are located.
   v_min_date DATE;
   v_max_date DATE;
+  v_load_status TEXT;
   
 BEGIN
   -- ================================================================================================
@@ -323,5 +324,29 @@ BEGIN
   --  (SELECT execution_time FROM %I.dim_meta_audit_log WHERE sk_audit_id = v_audit_id)
   --  USING v_schema_name;
   RAISE NOTICE 'DW load process completed successfully.';
+
+  -- =================================================================================================
+  -- Update the elt_control table with the last processed timestamp and status for incremental processing
+  -- =================================================================================================
+  RAISE NOTICE 'Updating elt_control table with last processed timestamp and status...';
+  EXECUTE format('
+    UPDATE %I.elt_control
+    SET last_processed = (SELECT MAX(interval_start) FROM %I.agg_15min_raw),
+        last_run_ts = clock_timestamp(),
+        status = %L
+    WHERE job_name = %L;', v_schema_name, v_schema_name, 'completed', 'agg_15min_job'
+  );
+  -- ================================================================================================
+  -- If DW load is successful, we can truncate the aggregated staging table to free up space
+  -- ================================================================================================
+  RAISE NOTICE 'Truncating aggregated staging table to free up space...';
+  EXECUTE format('SELECT status FROM %I.dim_meta_audit_log WHERE sk_audit_id = %L', v_schema_name, v_audit_id)
+        INTO v_load_status;
+  IF v_load_status = 'completed' THEN
+    EXECUTE format('TRUNCATE TABLE %I.agg_15min_raw', v_schema_name);
+    RAISE NOTICE 'Aggregated staging table truncated.';
+  ELSE
+    RAISE WARNING 'DW load did not complete successfully. Aggregated staging table has not been truncated for review.';
+  END IF;
 
 END $$;

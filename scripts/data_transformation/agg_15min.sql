@@ -32,14 +32,25 @@ DECLARE
   v_schema_name TEXT := 'dw_test';
   v_table_name TEXT := 'agg_15min_raw';
   v_granularity_interval TEXT := '15';
+  v_last_processed TIMESTAMP;
 BEGIN
   -- =================================================================================================
-  -- 1) Create the aggregated table if it doesn't exist
+  -- 1) Create the aggregated table and elt_control table if these don't exist
   -- This table will store the aggregated 15-minute OHLCV and VWAP data for each stock symbol.
   -- The primary key is a combination of symbol and interval_start to ensure uniqueness 
   --  of each 15-minute bar.
   -- =================================================================================================
   EXECUTE format('CREATE SCHEMA IF NOT EXISTS %I', v_schema_name);
+
+  EXECUTE format('
+    CREATE TABLE IF NOT EXISTS %I.elt_control (
+      id SERIAL PRIMARY KEY,
+      job_name VARCHAR(255),
+      last_processed TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+      last_run_ts TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+      status VARCHAR(50)
+    )
+  ', v_schema_name);
 
   EXECUTE format('
     CREATE TABLE IF NOT EXISTS %I.%I (
@@ -101,4 +112,19 @@ BEGIN
           trade_count = EXCLUDED.trade_count,
           symbol_type = EXCLUDED.symbol_type,
           granularity = EXCLUDED.granularity;', v_granularity_interval, v_schema_name, v_table_name, v_granularity_interval || 'min');
+
+  -- =================================================================================================
+  -- 3) Update the elt_control table with the last processed timestamp and status
+  -- After successfully processing the data, we update the elt_control table to record the last processed timestamp,
+  --  the last run timestamp, and the status of the job. This allows us to keep track of when the job was last run and what data was processed, which is useful for incremental processing in future runs.
+  -- =================================================================================================
+
+  EXECUTE format('SELECT last_processed FROM %I.elt_control WHERE job_name = %L', v_schema_name, 'agg_15min_job')
+        INTO v_last_processed;
+  IF v_last_processed IS NULL THEN
+    -- If there is no existing record for this job, insert a new one
+    EXECUTE format('
+      INSERT INTO %I.elt_control (job_name, last_processed, last_run_ts, status)
+      VALUES (%L, (SELECT MAX(interval_start) FROM %I.%I WHERE interval_start < clock_timestamp()), clock_timestamp(), %L)', v_schema_name, 'agg_15min_job', v_schema_name, v_table_name, 'started');
+  END IF;
 END $$;
