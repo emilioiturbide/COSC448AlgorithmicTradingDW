@@ -38,7 +38,7 @@
 DO $$
 DECLARE
   v_audit_id BIGINT;
-  v_schema_name TEXT := 'dw_test'; -- Change this to your desired schema name; must match the schema where your star schema tables are located.
+  v_schema_name TEXT := 'dw'; -- Change this to your desired schema name; must match the schema where your star schema tables are located.
   v_min_date DATE;
   v_max_date DATE;
   v_load_status TEXT;

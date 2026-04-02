@@ -29,7 +29,7 @@
 
 DO $$
 DECLARE
-  v_schema_name TEXT := 'dw_test';
+  v_schema_name TEXT := 'dw';
   v_table_name TEXT := 'agg_15min_raw';
   v_granularity_interval TEXT := '15';
   v_last_processed TIMESTAMP;
