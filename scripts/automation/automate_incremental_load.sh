@@ -14,15 +14,10 @@ while true; do
         echo "Warning: .env file not found at $ENV_FILE. Make sure to set environment variables manually."
     fi
     echo "Starting incremental load process..."
-    
-    HOST=$DB_HOST
-    echo "Database Host: $HOST"
-    PORT=$DB_PORT
-    USER=$DB_USERNAME
-    PASSWORD=$DB_PASSWORD
-    DB=$DB_NAME
+
+    module load postgresql/16.0
     # Run the incremental load script
-    psql -h $HOST -p $PORT -U $USER -d $DB -f ../data_transformation/agg_incremental.sql
+    psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_NAME -f ../data_transformation/agg_incremental.sql
     if [ $? -eq 0 ]; then
         echo "Incremental load completed successfully."
     else
@@ -30,7 +25,7 @@ while true; do
     fi
 
     # Load the aggregated data into the target database
-    psql -h $HOST -p $PORT -U $USER -d $DB -f ../data_transformation/fill_dw_from_agg.sql
+    psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_NAME -f ../data_transformation/fill_dw_from_agg.sql
     if [ $? -eq 0 ]; then
         echo "Data loaded into target database successfully."
     else
@@ -39,5 +34,5 @@ while true; do
 
     # Wait for a specified interval before the next incremental load
     echo "Waiting for the next incremental load..."
-    sleep 900 # Wait for 15 minutes (900 seconds)
+    sleep 30 # Wait for 30 seconds
 done

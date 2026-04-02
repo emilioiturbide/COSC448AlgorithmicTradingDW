@@ -11,6 +11,7 @@ while true; do
     fi
     echo "Starting full load process..."
     
+    module load postgresql/16.0
     # Run the full load script to aggregate all data and update the target database
     psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_NAME -f ../data_transformation/agg_full.sql
     if [ $? -eq 0 ]; then
