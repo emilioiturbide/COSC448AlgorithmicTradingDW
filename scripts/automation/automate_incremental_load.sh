@@ -15,8 +15,14 @@ while true; do
     fi
     echo "Starting incremental load process..."
     
+    HOST=$DB_HOST
+    echo "Database Host: $HOST"
+    PORT=$DB_PORT
+    USER=$DB_USERNAME
+    PASSWORD=$DB_PASSWORD
+    DB=$DB_NAME
     # Run the incremental load script
-    psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_NAME -f ../data_transformation/agg_incremental.sql
+    psql -h $HOST -p $PORT -U $USER -d $DB -f ../data_transformation/agg_incremental.sql
     if [ $? -eq 0 ]; then
         echo "Incremental load completed successfully."
     else
@@ -24,7 +30,7 @@ while true; do
     fi
 
     # Load the aggregated data into the target database
-    psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_NAME -f ../data_transformation/fill_dw_from_agg.sql
+    psql -h $HOST -p $PORT -U $USER -d $DB -f ../data_transformation/fill_dw_from_agg.sql
     if [ $? -eq 0 ]; then
         echo "Data loaded into target database successfully."
     else
