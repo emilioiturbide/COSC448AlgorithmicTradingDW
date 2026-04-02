@@ -19,7 +19,7 @@
 -- 2. Use the provided procedure to create monthly partitions for the fact table.
 
 -- Output:
--- - A set of tables in the 'dw_test' schema representing the star schema for the stock price data warehouse.
+-- - A set of tables in the 'dw' schema representing the star schema for the stock price data warehouse.
 
 -- Author: Emilio Iturbide Gonzalez
 -- License: MIT
@@ -27,7 +27,7 @@
 
 DO $$
 DECLARE
-    v_schema_name TEXT := 'dw_test'; -- Change this to your desired schema name
+    v_schema_name TEXT := 'dw'; -- Change this to your desired schema name
 BEGIN
     -- ==============================================================
     -- Create schema if it doesn't exist
