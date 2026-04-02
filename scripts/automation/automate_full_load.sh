@@ -3,7 +3,7 @@
 while true; do
 
     # load .env file if it exists
-    ENV_FILE=".env"
+    ENV_FILE="../.env"
     if [ -f "$ENV_FILE" ]; then
         . "$ENV_FILE"
     else
