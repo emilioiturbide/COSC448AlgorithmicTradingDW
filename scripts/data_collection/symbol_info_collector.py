@@ -31,7 +31,7 @@ import psycopg2
 import os
 try:
     from dotenv import load_dotenv
-    load_dotenv()
+    load_dotenv(dotenv_path='../.env')
 except Exception:
     pass
 from time import sleep
