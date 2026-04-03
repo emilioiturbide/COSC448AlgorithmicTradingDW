@@ -181,6 +181,24 @@ BEGIN
         ) PARTITION BY RANGE (fk_date_id)', v_schema_name, v_schema_name, v_schema_name, v_schema_name, v_schema_name, v_schema_name, v_schema_name);
 
     -- ==============================================================
+    -- Create indexes on fact table foreign keys
+    -- ==============================================================
+    EXECUTE FORMAT('
+        CREATE INDEX IF NOT EXISTS idx_fact_company ON
+            %I.fact_15min_stock_price (fk_company_id)
+    ', v_schema_name);
+
+    EXECUTE FORMAT('
+        CREATE INDEX IF NOT EXISTS idx_fact_instrument ON
+            %I.fact_15min_stock_price (fk_instrument_id)
+    ', v_schema_name);
+
+    EXECUTE FORMAT('
+        CREATE INDEX IF NOT EXISTS idx_fact_exchange ON
+            %I.fact_15min_stock_price (fk_exchange_id)
+    ', v_schema_name);
+
+    -- ==============================================================
     -- Create procedure to generate monthly partitions for the fact table
     -- ==============================================================
     EXECUTE FORMAT('
