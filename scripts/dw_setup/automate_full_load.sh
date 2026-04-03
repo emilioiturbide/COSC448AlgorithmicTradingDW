@@ -2,6 +2,16 @@
 # ==============================================================================
 # Script: automate_full_load.sh
 
+# Copyright (c) 2026 Emilio Iturbide Gonzalez
+# This software is licensed under the MIT License, located in the root directory
+#   of this project (LICENSE file).
+# ==============================================================================
+
+# Use of AI:
+# Github Copilot AI was used to help debug the implementation of the script.
+# All AI-generated suggestions were reviewed, verified, and modified by the author
+#   before inclusion.
+
 # Purpose: 
 # This script automates the full load process for a data pipeline.
 # It performs the following steps:
@@ -30,6 +40,8 @@
 # It will also indicate when it is waiting for the next full load.
 
 # Author: Emilio Iturbide Gonzalez
+# Date Created: 02/05/2026
+# Date Last Modified: 04/03/2026
 # License: MIT
 # ==============================================================================
 

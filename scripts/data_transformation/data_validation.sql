@@ -1,6 +1,16 @@
 -- ================================================================================================
 -- Script: data_validation.sql
 
+-- Copyright (c) 2026 Emilio Iturbide Gonzalez
+-- This software is licensed under the MIT License, located in the root directory
+--   of this project (LICENSE file).
+-- ================================================================================================
+
+-- Use of AI:
+-- Github Copilot AI was used to help debug the implementation of the script.
+-- All AI-generated suggestions were reviewed, verified, and modified by the author
+--   before inclusion.
+
 -- Purpose:
 -- This SQL script performs data validation and transformation on raw stock price data.
 -- It creates views to cleanse and harden the data, and then inserts the validated data 
@@ -26,6 +36,8 @@
 --   stock price data ready for further processing.
 
 -- Author: Emilio Iturbide Gonzalez
+-- Date Created: 02/05/2026
+-- Date Last Modified: 04/03/2026
 -- License: MIT
 -- ================================================================================================
 

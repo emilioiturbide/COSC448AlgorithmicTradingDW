@@ -1,6 +1,11 @@
 # ================================================================================
 # Script: insertToDB.py
 
+# Use of AI:
+# Github Copilot AI was used to help debug the implementation of the script.
+# All AI-generated suggestions were reviewed, verified, and modified by the author
+#   before inclusion.
+
 # Purpose: 
 # This script is responsible for inserting raw stock data from CSV files 
 #   into the PostgreSQL database. It connects to the database, reads the CSV files, 

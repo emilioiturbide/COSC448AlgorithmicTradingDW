@@ -1,6 +1,16 @@
 # =============================================================================
 # Script: symbol_info_collector.py
 
+# Copyright (c) 2026 Emilio Iturbide Gonzalez
+# This software is licensed under the MIT License, located in the root directory
+#   of this project (LICENSE file).
+# ==============================================================================
+
+# Use of AI:
+# Github Copilot AI was used to help debug the implementation of the script.
+# All AI-generated suggestions were reviewed, verified, and modified by the author
+#   before inclusion.
+
 # Purpose:
 # This script is responsible for collecting stock symbol information from the FMP API
 #   and inserting it into the PostgreSQL database. It connects to the database,
@@ -23,6 +33,8 @@
 #   to the console.
 
 # Author: Emilio Iturbide Gonzalez
+# Date Created: 02/05/2026
+# Date Last Modified: 04/03/2026
 # License: MIT
 # =============================================================================
 

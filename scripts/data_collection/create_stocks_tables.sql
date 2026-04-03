@@ -1,6 +1,11 @@
 -- ================================================================================================
 -- Script: create_stocks_tables.sql
 
+-- Use of AI:
+-- Github Copilot AI was used to help debug the implementation of the script.
+-- All AI-generated suggestions were reviewed, verified, and modified by the author
+--   before inclusion.
+
 -- Purpose:
 -- This SQL script creates tables for storing stock price data for a predefined list of stock tickers.
 -- Each table is named after the stock ticker and includes columns for date, open, high, low, close, 

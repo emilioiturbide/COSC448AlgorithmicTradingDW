@@ -1,6 +1,16 @@
 -- ================================================================================================
 -- Script: fill_dw_from_agg.sql
 
+-- Copyright (c) 2026 Emilio Iturbide Gonzalez
+-- This software is licensed under the MIT License, located in the root directory
+--   of this project (LICENSE file).
+-- ================================================================================================
+
+-- Use of AI:
+-- Github Copilot AI was used to help debug the implementation of the script.
+-- All AI-generated suggestions were reviewed, verified, and modified by the author
+--   before inclusion.
+
 -- Purpose:
 -- This SQL script populates the data warehouse (DW) from the aggregated 15-minute 
 --  stock price data in the staging area. 
@@ -32,6 +42,8 @@
 -- - Updated audit log entry in dim_meta_audit_log with execution details.
 
 -- Author: Emilio Iturbide Gonzalez
+-- Date Created: 02/05/2026
+-- Date Last Modified: 04/03/2026
 -- License: MIT
 -- ================================================================================================
 

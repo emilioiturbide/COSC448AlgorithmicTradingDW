@@ -1,6 +1,11 @@
 -- ================================================================================
 -- Script: create_sector_symbolInfo_tables.sql
 
+-- Use of AI:
+-- Github Copilot AI was used to help debug the implementation of the script.
+-- All AI-generated suggestions were reviewed, verified, and modified by the author
+--   before inclusion.
+
 -- Purpose:
 -- This SQL script creates two tables in the 'market' schema: 'Sectors'
 --      and 'Symbol_Info'.
