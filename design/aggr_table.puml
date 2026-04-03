@@ -1,0 +1,26 @@
+@startuml
+
+entity "agg_15min_raw" {
+    * symbol : VARCHAR(10) <<PK>>
+    * interval_start : TIMESTAMP <<PK>>
+--
+    * timezone : VARCHAR
+    * symbol_type : VARCHAR(20)
+    * open : NUMERIC(18,6)
+    * high : NUMERIC(18,6)
+    * low : NUMERIC(18,6)
+    * close : NUMERIC(18,6)
+    * volume : BIGINT
+    * trade_count : INT
+    * granularity : VARCHAR(20)
+}
+
+entity "elt_control" {
+    * id : BIGINT <<PK>>
+--
+    * job_name : VARCHAR
+    * last_processed : TIMESTAMP
+    * last_run_ts : TIMESTAMP
+    * status : VARCHAR
+}
+@enduml

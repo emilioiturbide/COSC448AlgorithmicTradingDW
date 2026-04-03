@@ -1,0 +1,101 @@
+@startuml
+entity "fact_daily_stock_price" {
+    * sk_fact_id : BIGINT <<PK>>
+--
+    * fk_company_id : BIGINT <<FK>>
+    * fk_date_id : BIGINT <<FK>>
+    * fk_exchange_id : BIGINT <<FK>>
+    * fk_instrument_id : BIGINT <<FK>>
+    * fk_audit_id : BIGINT <<FK>>
+    
+    * open_price : DECIMAL(18,6)
+    * high_price : DECIMAL(18,6)
+    * low_price : DECIMAL(18,6)
+    * close_price : DECIMAL(18,6)
+    * volume : BIGINT
+    * adj_close : DECIMAL(18,6)
+    * vwap : DECIMAL(18,6)
+    * previous_close : DECIMAL(18,6)
+    * price_change : DECIMAL(18,6)
+    * price_change_pct : DECIMAL(5,2)
+}
+
+entity "dim_date" {
+    * sk_date_id : BIGINT <<PK>>
+--
+    * datetime : TIMESTAMP
+    * date : DATE
+    * hour : INT
+    * minute : INT
+    * second : INT
+    * day_of_week : INT
+    * day_name : VARCHAR(20)
+    * day_of_month : INT
+    * day_of_year : INT
+    * month : INT
+    * month_name : VARCHAR(20)
+    * year : INT
+    * quarter : INT
+    * is_weekend : BOOLEAN
+    * is_holiday : BOOLEAN
+    * fiscal_year : INT
+    * fiscal_quarter : INT
+}
+
+entity "dim_company" {
+    * sk_company_id : BIGINT <<PK>>
+--
+    * symbol : VARCHAR(10)
+    * company_name : VARCHAR(255)
+    * ceo : VARCHAR(255)
+    * currency : VARCHAR(10)
+    * sector : VARCHAR(100)
+    * industry : VARCHAR(100)
+    * full_time_employees : INT
+    * country : VARCHAR(100)
+    * state : VARCHAR(100)
+    * city : VARCHAR(100)
+    * zip : VARCHAR(20)
+    * address : VARCHAR(255)
+    * ipo_date : DATE 
+    * is_active : BOOLEAN
+    * is_etf : BOOLEAN
+    * is_fund : BOOLEAN
+    * row_effective_ts : TIMESTAMP
+    * row_end_ts : TIMESTAMP
+}
+
+entity "dim_exchange" {
+    * sk_exchange_id : BIGINT <<PK>>
+--
+    * exchange_code : VARCHAR(10)
+    * exchange_name : VARCHAR(100)
+}
+
+entity "dim_meta_audit_log" {
+    * sk_audit_id : BIGINT <<PK>>
+--
+    * source_system : VARCHAR(100)
+    * row_count_raw : BIGINT
+    * row_count_rejected : BIGINT
+    * execution_start_ts : TIMESTAMP
+    * execution_end_ts : TIMESTAMP
+    * execution_time : INT
+    * status : VARCHAR(50)
+}
+
+entity "dim_instrument" {
+    * sk_instrument_id : BIGINT <<PK>>
+--
+    * symbol : VARCHAR(10)
+    * name : VARCHAR(255)
+    * instrument_type : ENUM('STOCK', 'INDEX', 'COMMODITY', 'BOND')
+    * currency : VARCHAR(10)
+}
+
+fact_daily_stock_price }|..|| dim_date : "sk_date_id"
+fact_daily_stock_price }|..|| dim_company : "sk_company_id"
+fact_daily_stock_price }|..|| dim_exchange : "sk_exchange_id"
+fact_daily_stock_price }|..|| dim_instrument : "sk_instrument_id"
+fact_daily_stock_price }|..|| dim_meta_audit_log : "sk_audit_id"
+@enduml

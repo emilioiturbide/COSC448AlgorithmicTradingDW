@@ -1,0 +1,44 @@
+@startuml
+entity "stg_stock_price" {
+    * stock_id : BIGINT <<PK>>
+--
+    * ticker_symbol : VARCHAR(10)
+    * trade_date : TIMESTAMP
+    * open_price : NUMERIC(18,6)
+    * high_price : NUMERIC(18,6)
+    * low_price : NUMERIC(18,6)
+    * close_price : NUMERIC(18,6)
+    * volume : BIGINT
+    * symbol_type : VARCHAR(20)
+    * _source_name : VARCHAR(255)
+    * _source_filename : VARCHAR(255)
+    * _is_cleansed : BOOLEAN
+    * _is_duplicate : BOOLEAN
+    * _audit_hash : VARCHAR(64)
+}
+
+entity "stg_companies" {
+    * symbol : VARCHAR(10) <<PK>>
+--
+    * company_name : VARCHAR(255)
+    * ceo : VARCHAR(255)
+    * currency : VARCHAR(10)
+    * sector : VARCHAR(100)
+    * industry : VARCHAR(100)
+    * full_time_employees : INT
+    * country : VARCHAR(100)
+    * state : VARCHAR(100)
+    * city : VARCHAR(100)
+    * zip : VARCHAR(20)
+    * address : VARCHAR(255)
+    * exchange : VARCHAR(100)
+    * exchange_full_name : VARCHAR(100)
+    * ipo_date : DATE
+    * is_active : BOOLEAN
+    * is_etf : BOOLEAN
+    * is_fund : BOOLEAN
+    * _source_name : VARCHAR(255)
+    * _source_filename : VARCHAR(255)
+}
+
+@enduml
