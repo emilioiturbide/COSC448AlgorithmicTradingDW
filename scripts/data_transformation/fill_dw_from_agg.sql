@@ -320,9 +320,7 @@ BEGIN
     WHERE sk_audit_id = %L;', v_schema_name, v_audit_id
   );
   RAISE NOTICE 'Audit log entry updated with completion status and execution time.';
-  --RAISE NOTICE 'Execution time (seconds): %',
-  --  (SELECT execution_time FROM %I.dim_meta_audit_log WHERE sk_audit_id = v_audit_id)
-  --  USING v_schema_name;
+ 
   RAISE NOTICE 'DW load process completed successfully.';
 
   -- =================================================================================================
