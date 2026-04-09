@@ -65,7 +65,7 @@ CONNECTION_PARAMS = {
     'host': os.getenv('DB_HOST'),
     'port': os.getenv('DB_PORT'),
     'database': os.getenv('DB_NAME'),
-    'user': os.getenv('DB_USERNAME'),
+    'user': os.getenv('DB_USER'),
     'password': os.getenv('DB_PASSWORD')
 }
 def main():
@@ -77,7 +77,7 @@ def main():
     # Modifications: Updated file paths to match new directory structure,
     # ================================================================================
     # 503 stock CSV files
-    #csvStockDirectory = "./input/503_Stocks/"
+    #csvStockDirectory = "../../input/503_Stocks/"
     # 29 stock CSV files
     csvStockDirectory = "../../input/29_Stocks/"
     csv_files = glob.glob(os.path.join(csvStockDirectory, "*.csv"))

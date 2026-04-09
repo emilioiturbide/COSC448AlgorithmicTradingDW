@@ -56,7 +56,7 @@ POSTGRES_CONNECTION_PARAMS = {
     'host': os.getenv('DB_HOST'),
     'port': os.getenv('DB_PORT'),
     'database': os.getenv('DB_NAME'),
-    'user': os.getenv('DB_USERNAME'),
+    'user': os.getenv('DB_USER'),
     'password': os.getenv('DB_PASSWORD')
 }
 
@@ -84,7 +84,7 @@ def fetch_stock_symbols():
     # =============================================================================
 
     # list of 503 stocks
-    '''symbols_list = [
+    symbols_list = [
         'A','AAPL','ABBV','ABNB','ABT','ACGL','ACN','ADBE','ADI','ADM','ADP',
         'ADSK','AEE','AEP','AES','AFL','AIG','AIZ','AJG','AKAM','ALB','ALGN',
         'ALL','ALLE','AMAT','AMCR','AMD','AME','AMGN','AMP','AMT','AMZN','ANET',
@@ -126,14 +126,14 @@ def fetch_stock_symbols():
         'V','VICI','VLO','VLTO','VMC','VRSK','VRSN','VRTX','VST','VTR','VTRS','VZ','WAB',
         'WAT','WBD','WDAY','WDC','WEC','WELL','WFC','WM','WMB','WMT','WRB','WSM','WST',
         'WTW','WY','WYNN','XEL','XOM','XYL','XYZ','YUM','ZBH','ZBRA','ZTS'
-    ]'''
+    ]
     
     # list of 29 stocks
-    symbols_list = [
+    '''symbols_list = [
         "AAPL", "AMD", "AMZN", "BA", "BABA", "BAC", "C", "CSCO", "CVX", "DIS", 
         "F", "GE", "GOOGL", "IBM", "INTC", "JNJ", "JPM", "KO", "MCD", "META", 
         "MSFT", "NFLX", "NVDA", "PFE", "T", "TSLA", "VZ", "WMT", "XOM"
-    ]
+    ]'''
     
     # =============================================================================
     # Split symbols_list into chunks of 50 to avoid URL length issues
@@ -143,7 +143,7 @@ def fetch_stock_symbols():
     for i in range(0, len(symbols_list), 50):
         chunk = symbols_list[i:i + 50]
         chunk_data = collect_symbol_data(chunk, url)
-        sleep(20)
+        sleep(30)
         stock_data.extend(chunk_data)
     return stock_data
 
