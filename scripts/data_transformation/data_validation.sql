@@ -108,7 +108,7 @@ BEGIN
         symbol_type VARCHAR(20),
         _source_name VARCHAR(255),
         _source_filename VARCHAR(255),
-        _is_cleansed BOOLEAN,
+        _is_cleaned BOOLEAN,
         _is_duplicate BOOLEAN,
         _audit_hash VARCHAR(64)
     );
@@ -231,15 +231,17 @@ BEGIN
                             OR close_price IS NULL
                             OR volume IS NULL
                             OR high_price IS NULL
-                            OR low_price IS NULL THEN TRUE
+                            OR low_price IS NULL THEN FALSE
                     WHEN open_price < 0
                             OR high_price < 0
                             OR low_price < 0
                             OR close_price < 0
-                            OR volume < 0 THEN TRUE
-                    WHEN high_price < low_price THEN TRUE
-                    ELSE FALSE
-                END AS _is_cleansed,
+                            OR volume < 0 THEN FALSE
+                    WHEN high_price < low_price 
+                            OR NOT(open_price >= low_price AND open_price <= high_price) 
+                            OR NOT(close_price >= low_price AND close_price <= high_price) THEN FALSE
+                    ELSE TRUE
+                END AS _is_cleaned,
                 'v2.0' AS _transformation_version
 
             FROM market.%2$I;
@@ -264,7 +266,7 @@ BEGIN
                 symbol_type,
                 _source_name,
                 _source_filename,
-                _is_cleansed,
+                _is_cleaned,
                 _is_duplicate,
                 _audit_hash
             )
@@ -280,7 +282,7 @@ BEGIN
                 symbol_type,
                 _source_name,
                 _source_filename,
-                _is_cleansed,
+                _is_cleaned,
                 _is_duplicate,
                 _audit_hash
             FROM market.%1$I;
